@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import RoomRoute from "./routes/room.routes.js";
 import BookingRoute from "./routes/booking.routes.js";
 import UserRoute from "./routes/user.routes.js";
@@ -18,6 +19,7 @@ dotenv.config();
 // Enable CORS (Cross-Origin Resource Sharing) for development purposes
 app.use(
   cors({
+    credentials: true,
     origin: "http://localhost:5000",
   })
 );
