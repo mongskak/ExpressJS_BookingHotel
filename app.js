@@ -12,13 +12,15 @@ import { errorMiddleware } from "./middleware/errorHandler.middleware.js";
 const app = express();
 
 // Middleware to parse JSON request bodies
-app.use(
-  cors({
-    origin: "localhost:5000",
-  })
-);
 app.use(express.json());
 dotenv.config();
+
+// Enable CORS (Cross-Origin Resource Sharing) for development purposes
+app.use(
+  cors({
+    origin: "http://localhost:5000",
+  })
+);
 
 // Define routes
 app.use("/api/v1/rooms", RoomRoute);
