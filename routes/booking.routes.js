@@ -5,14 +5,14 @@ import {
   getBookings,
   updateStatusBooking,
 } from "../controllers/booking.controller.js";
-import { readToken } from "../middleware/auth.middleware.js";
+import { readAccessToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.use(readToken);
-router.post("/", createBooking);
-router.get("/", getBookings);
-router.get("/:id", getBookingDetail);
-router.put("/:id", updateStatusBooking);
+router.use(readAccessToken);
+router.post("/", readAccessToken, createBooking);
+router.get("/", readAccessToken, getBookings);
+router.get("/:id", readAccessToken, getBookingDetail);
+router.put("/:id", readAccessToken, updateStatusBooking);
 
 export default router;

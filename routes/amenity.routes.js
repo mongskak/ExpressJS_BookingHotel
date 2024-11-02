@@ -4,11 +4,11 @@ import {
   deleteAmenity,
   getAmenities,
 } from "../controllers/amenity.controllers.js";
-import { readToken } from "../middleware/auth.middleware.js";
+import { readAccessToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.use(readToken);
+router.use(readAccessToken);
 router.get("/", getAmenities);
 router.post("/", createAmenity);
 router.delete("/:id", deleteAmenity);

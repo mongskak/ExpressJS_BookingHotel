@@ -3,15 +3,28 @@ import Booking from "../models/booking.model.js";
 
 export const getRooms = async (req, res) => {
   try {
-    const rooms = await Room.find({});
-    const count = rooms.length;
-    const isEmpty = count === 0;
+    // const rooms = await Room.find({});
+    // const count = rooms.length;
+    // const isEmpty = count === 0;
 
-    res.status(200).json({
+    // res.status(200).json({
+    //   success: true,
+    //   data: rooms,
+    //   count: count,
+    //   isEmpty: isEmpty,
+    // });
+    const page = parseInt(req.query.page) || 1; // Halaman yang diminta
+    const limit = parseInt(req.query.limit) || 10; // Batas jumlah per halaman
+    const skip = (page - 1) * limit; // Hitung berapa banyak data yang harus dilewati
+
+    const totalRooms = await Room.countDocuments(); // Hitung total kamar
+    const rooms = await Room.find().skip(skip).limit(limit); // Ambil data dengan pagination
+
+    res.json({
       success: true,
       data: rooms,
-      count: count,
-      isEmpty: isEmpty,
+      totalPages: Math.ceil(totalRooms / limit), // Total halaman
+      currentPage: page, // Halaman saat ini
     });
   } catch (error) {
     res.status(500).json({ msg: "server error" });
@@ -82,13 +95,11 @@ export const getRoomById = async (req, res, next) => {
       error.status = 404;
       return next(error);
     }
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "room retrieved successfully",
-        data: room,
-      });
+    res.status(200).json({
+      success: true,
+      message: "room retrieved successfully",
+      data: room,
+    });
   } catch (error) {
     error.status = 500;
     next(error);

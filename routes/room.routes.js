@@ -7,17 +7,17 @@ import {
   getRooms,
   updateRoom,
 } from "../controllers/room.controllers.js";
-import { readToken } from "../middleware/auth.middleware.js";
+import { readAccessToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.use(readToken);
+// router.use(readAccessToken);
 
-router.get("/", getRooms);
-router.post("/", createRoom);
-router.put("/:id", updateRoom);
-router.delete("/:id", deleteRoom);
-router.get("/:id", getRoomById);
-router.post("/availableRoom", getAvailableRoomNumber);
+router.get("/", readAccessToken, getRooms);
+router.post("/", readAccessToken, createRoom);
+router.put("/:id", readAccessToken, updateRoom);
+router.delete("/:id", readAccessToken, deleteRoom);
+router.get("/:id", readAccessToken, getRoomById);
+router.post("/availableRoom", readAccessToken, getAvailableRoomNumber);
 
 export default router;

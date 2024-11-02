@@ -1,12 +1,17 @@
 import jwt from "jsonwebtoken";
 
 // Fungsi untuk membuat token
-export const createToken = (payload) => {
-  return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "1h" });
+export const createAccessToken = (payload) => {
+  return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "15s" });
+};
+export const createRefreshToken = (payload) => {
+  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: "1d",
+  });
 };
 
 // Middleware untuk membaca token dari header
-export const readToken = (req, res, next) => {
+export const readAccessToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (!token) {
