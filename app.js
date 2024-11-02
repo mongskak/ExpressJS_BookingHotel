@@ -20,7 +20,11 @@ const app = express();
 app.use(
   cors({
     credentials: true,
+<<<<<<< HEAD
     origin: process.env.CORS_ORIGIN,
+=======
+    origin: "http://localhost:5000",
+>>>>>>> 84f53c625b44cb81ebff7a28ba673c0f550ea0b9
   })
 );
 
