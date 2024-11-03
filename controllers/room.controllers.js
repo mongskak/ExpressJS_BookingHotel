@@ -17,13 +17,13 @@ export const getRooms = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10; // Batas jumlah per halaman
     const skip = (page - 1) * limit; // Hitung berapa banyak data yang harus dilewati
 
-    const totalRooms = await Room.countDocuments(); // Hitung total kamar
+    const count = await Room.countDocuments(); // Hitung total kamar
     const rooms = await Room.find().skip(skip).limit(limit); // Ambil data dengan pagination
 
     res.json({
       success: true,
       data: rooms,
-      totalPages: Math.ceil(totalRooms / limit), // Total halaman
+      count: count, // Total halaman
       currentPage: page, // Halaman saat ini
     });
   } catch (error) {
@@ -109,7 +109,6 @@ export const getRoomById = async (req, res, next) => {
 export const getAvailableRoomNumber = async (req, res) => {
   const { NumberOfAdults, NumberOfChildren, CheckInDate, CheckOutDate } =
     req.body;
-
   try {
     const checkIn = new Date(CheckInDate);
     const checkOut = new Date(CheckOutDate);

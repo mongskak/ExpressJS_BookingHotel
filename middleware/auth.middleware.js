@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 // Fungsi untuk membuat token
 export const createAccessToken = (payload) => {
-  return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "15s" });
+  return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "1h" });
 };
 export const createRefreshToken = (payload) => {
   return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {

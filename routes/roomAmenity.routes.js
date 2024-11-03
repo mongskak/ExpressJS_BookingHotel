@@ -9,8 +9,8 @@ import { readAccessToken } from "../middleware/auth.middleware.js";
 const router = express.Router();
 
 router.use(readAccessToken);
-router.get("/", getRoomAmenities);
-router.post("/", createRoomAmenity);
-router.get("/:roomId", getRoomAmenitieByRoomId);
+router.get("/", readAccessToken, getRoomAmenities);
+router.post("/", readAccessToken, createRoomAmenity);
+router.get("/:roomId", readAccessToken, getRoomAmenitieByRoomId);
 
 export default router;
