@@ -8,6 +8,7 @@ import UserRoute from "./routes/user.routes.js";
 import AmenityRoute from "./routes/amenity.routes.js";
 import RoomAmenityRoute from "./routes/roomAmenity.routes.js";
 import RoomServiceTypeRoute from "./routes/roomServiceType.routes.js";
+import RoomServiceRoute from "./routes/roomService.routes.js";
 import { errorMiddleware } from "./middleware/errorHandler.middleware.js";
 import cookieParser from "cookie-parser";
 
@@ -38,6 +39,7 @@ app.use("/api/v1/bookings", BookingRoute);
 app.use("/api/v1/amenities", AmenityRoute);
 app.use("/api/v1/roomAmenity", RoomAmenityRoute);
 app.use("/api/v1/roomServiceType", RoomServiceTypeRoute);
+app.use("/api/v1/roomService", RoomServiceRoute);
 
 // error handling
 app.use(errorMiddleware);

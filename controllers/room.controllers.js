@@ -2,23 +2,18 @@ import Room from "../models/room.model.js";
 import Booking from "../models/booking.model.js";
 
 export const getRooms = async (req, res) => {
-  try {
-    // const rooms = await Room.find({});
-    // const count = rooms.length;
-    // const isEmpty = count === 0;
+  const query = {};
 
-    // res.status(200).json({
-    //   success: true,
-    //   data: rooms,
-    //   count: count,
-    //   isEmpty: isEmpty,
-    // });
+  if (req.query.roomNumber) {
+    query.roomNumber = new RegExp(req.query.roomNumber, "i"); // Mencari kamar dengan roomNumber yang sesuai
+  }
+  try {
     const page = parseInt(req.query.page) || 1; // Halaman yang diminta
     const limit = parseInt(req.query.limit) || 10; // Batas jumlah per halaman
     const skip = (page - 1) * limit; // Hitung berapa banyak data yang harus dilewati
 
     const count = await Room.countDocuments(); // Hitung total kamar
-    const rooms = await Room.find().skip(skip).limit(limit); // Ambil data dengan pagination
+    const rooms = await Room.find(query).skip(skip).limit(limit); // Ambil data dengan pagination
 
     res.json({
       success: true,

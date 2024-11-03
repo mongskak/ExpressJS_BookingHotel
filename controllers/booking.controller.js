@@ -41,9 +41,27 @@ export const getBookings = async (req, res) => {
   const page = parseInt(req.query.page) || 1; // Halaman yang diminta
   const limit = parseInt(req.query.limit) || 10; // Batas jumlah per halaman
   const skip = (page - 1) * limit; // Hitung berapa banyak data yang harus dilewati
+
+  const query = {};
+  if (req.query.status) {
+    query.status = req.query.status;
+  }
+  if (req.query.checkInDate) {
+    query.checkInDate = new Date(req.query.checkInDate);
+  }
+  if (req.query.checkOutDate) {
+    query.checkOutDate = new Date(req.query.checkOutDate);
+  }
+  if (req.query.guestLastName) {
+    query.guestLastName = req.query.guestLastName;
+  }
+  if (req.query.roomId) {
+    query.roomId = req.query.roomId;
+  }
+
   try {
     const count = await Booking.countDocuments();
-    const bookings = await Booking.find()
+    const bookings = await Booking.find(query)
       .populate("roomId")
       .skip(skip)
       .limit(limit);
@@ -73,6 +91,26 @@ export const getBookingDetail = async (req, res) => {
       return res.status(404).json({ msg: "Booking not found" });
     }
     res.status(200).json({ msg: "success", data: bookingDetail });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "server error" });
+  }
+};
+
+export const getBookingByStatusAndDate = async (req, res) => {
+  const { status } = req.query;
+  const { Date } = req.query;
+  try {
+    const bookings = await Booking.find({
+      status: status,
+      $or: [{ checkInDate: Date }, { checkOutDate: Date }],
+    });
+    if (!bookings) {
+      return res
+        .status(404)
+        .json({ msg: "No bookings found with this status" });
+    }
+    res.status(200).json({ msg: "success", data: bookings });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "server error" });
