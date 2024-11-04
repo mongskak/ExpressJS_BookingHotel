@@ -7,9 +7,7 @@ export const getAmenities = async (req, res) => {
       success: true,
       data: amenities,
     });
-  } catch (error) {
-    next(error);
-  }
+  } catch (error) {}
 };
 
 export const createAmenity = async (req, res) => {
@@ -22,19 +20,15 @@ export const createAmenity = async (req, res) => {
       message: "data created successfully",
       data: newAmenity,
     });
-  } catch (error) {
-    next(error);
-  }
+  } catch (error) {}
 };
 
 export const deleteAmenity = async (req, res) => {
   const { id } = req.params;
   try {
-    await Amenity.findByIdAndDelete(id);
+    const res = await Amenity.findByIdAndDelete(id);
     res
       .status(200)
       .json({ success: true, message: "data deleted successfully" });
-  } catch (error) {
-    next(error);
-  }
+  } catch (error) {}
 };

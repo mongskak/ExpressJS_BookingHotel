@@ -19,18 +19,14 @@ export const createRoomService = async (req, res, next) => {
 export const getRoomService = async (req, res) => {
   const query = {};
 
-  if (req.query.Bookingid) {
-    query.bookingid = req.query.bookingid;
+  if (req.query.bookingid) {
+    query.bookingId = req.query.bookingid;
   }
-
   try {
-    const roomService = await RoomService.find(query).populate(Bookingid);
-    if (!roomService) {
-      return res.status(404).json({
-        message: "Room service not found",
-      });
-    }
-    res.json({
+    const roomService = await RoomService.find(query)
+      .populate("roomServiceTypeId")
+      .populate("bookingId");
+    res.status(200).json({
       message: "Room service found",
       data: roomService,
     });

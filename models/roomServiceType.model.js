@@ -12,7 +12,7 @@ const serviceRoomTypeSchema = new mongoose.Schema({
 });
 
 const ServiceRoomType = mongoose.model(
-  "ServiceRoomType",
+  "RoomServiceType",
   serviceRoomTypeSchema
 );
 

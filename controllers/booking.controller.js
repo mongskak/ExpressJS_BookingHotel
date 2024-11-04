@@ -3,7 +3,6 @@ import Booking from "../models/booking.model.js";
 
 export const createBooking = async (req, res, next) => {
   const bookingRecord = req.body;
-  console.log(bookingRecord);
   try {
     // Cari Room berdasarkan roomNumber
     const room = await Room.findOne({
@@ -60,7 +59,7 @@ export const getBookings = async (req, res) => {
   }
 
   try {
-    const count = await Booking.countDocuments();
+    const count = await Booking.countDocuments(query);
     const bookings = await Booking.find(query)
       .populate("roomId")
       .skip(skip)
@@ -85,6 +84,7 @@ export const getBookingDetail = async (req, res) => {
       numberOfAdults: booking.numberOfAdults,
       numberOfChildren: booking.numberOfChildren,
       roomNumber: booking.roomId.roomNumber,
+      roomPrice: booking.roomId.price,
       status: booking.status,
     };
     if (!bookingDetail) {
@@ -135,5 +135,45 @@ export const updateStatusBooking = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "server error" });
+  }
+};
+
+export const occupancyrate = async (req, res) => {
+  try {
+    const totalRooms = await Room.countDocuments();
+    const today = new Date();
+    const occupancyRates = [];
+
+    // Loop untuk setiap hari selama 7 hari ke depan
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date();
+      currentDate.setDate(today.getDate() + i);
+
+      // Hitung jumlah booking untuk hari ini
+      const bookingsToday = await Booking.find({
+        checkInDate: { $lte: currentDate },
+        checkOutDate: { $gt: currentDate },
+      });
+
+      // Hitung total kamar yang terisi
+      const occupiedRooms = new Set(
+        bookingsToday.map((booking) => booking.roomId.toString())
+      ).size;
+
+      // Hitung occupancy rate
+      const occupancyRate =
+        totalRooms > 0 ? (occupiedRooms / totalRooms) * 100 : 0;
+
+      occupancyRates.push({
+        date: currentDate.toISOString().split("T")[0], // Format YYYY-MM-DD
+        totalRooms,
+        occupiedRooms,
+        occupancyRate,
+      });
+    }
+
+    res.status(200).json(occupancyRates);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
