@@ -72,6 +72,16 @@ export const deleteRoom = async (req, res) => {
   if (!id) {
     return res.status(400).json({ msg: "Invalid ID" });
   }
+  const response = await Booking.find({
+    roomId: id,
+  });
+  if (response.length > 0) {
+    return res
+      .status(400)
+      .json({
+        msg: "Cannot delete room with bookings. Delete bookings first.",
+      });
+  }
 
   try {
     await Room.findByIdAndDelete(id);

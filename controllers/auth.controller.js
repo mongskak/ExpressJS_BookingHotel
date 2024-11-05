@@ -7,6 +7,12 @@ import {
 } from "../middleware/auth.middleware.js";
 
 export const Token = async (req, res, next) => {
+  const userId = req.cookies.userId;
+  if (!userId) {
+    res.clearCookie("refreshToken");
+    res.clearCookie("userId");
+    return res.status(403).json({ msg: "No user ID found" });
+  }
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.status(403).json({ msg: "No refresh token" });
   try {
